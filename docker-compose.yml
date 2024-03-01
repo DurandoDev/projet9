@@ -24,8 +24,9 @@ services:
     environment:
       MONGO_INITDB_DATABASE: notes
 
-  backPatient:
-    image: backpatient:latest
+  backpatient:
+    build:
+      context: ./backPatient
     ports:
       - "8085:8082"
     environment:
@@ -33,13 +34,15 @@ services:
     depends_on:
       - mysql-db
 
-  backDiabete:
-    image: backdiabete:latest
+  backdiabete:
+    build:
+      context: ./backDiabete
     ports:
       - "8084:8084"
 
-  backNotes:
-    image: backnotes:latest
+  backnotes:
+    build:
+      context: ./backNotes
     ports:
       - "8086:8083"
     environment:
@@ -48,7 +51,8 @@ services:
       - mongodb
 
   front:
-    image: frontend:latest
+    build:
+      context: ./front
     ports:
       - "8081:8081"
     environment:
@@ -57,11 +61,12 @@ services:
       - mysql-db-users
 
   gateway:
-    image: gateway:latest
+    build:
+      context: ./gateway
     ports:
       - "8088:8080"
     depends_on:
-      - backPatient
-      - backDiabete
-      - backNotes
+      - backpatient
+      - backdiabete
+      - backnotes
       - front
