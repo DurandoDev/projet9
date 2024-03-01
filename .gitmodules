@@ -1,0 +1,15 @@
+[submodule "backDiabete"]
+	path = backDiabete
+	url = https://github.com/DurandoDev/backDiabete.git
+[submodule "backNotes"]
+	path = backNotes
+	url = https://github.com/DurandoDev/backNotes.git
+[submodule "backPatient"]
+	path = backPatient
+	url = https://github.com/DurandoDev/backPatient.git
+[submodule "front"]
+	path = front
+	url = https://github.com/DurandoDev/front.git
+[submodule "gateway"]
+	path = gateway
+	url = https://github.com/DurandoDev/gateway.git

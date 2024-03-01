@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: db_medilabo
+      MYSQL_ROOT_PASSWORD: "@zertyuiop123"
+    ports:
+      - "3307:3306"
+
+  mysql-db-users:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: db_medilabo_users
+      MYSQL_ROOT_PASSWORD: "@zertyuiop123"
+    ports:
+      - "3308:3306"
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: notes
+
+  backPatient:
+    image: backpatient:latest
+    ports:
+      - "8085:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_medilabo
+    depends_on:
+      - mysql-db
+
+  backDiabete:
+    image: backdiabete:latest
+    ports:
+      - "8084:8084"
+
+  backNotes:
+    image: backnotes:latest
+    ports:
+      - "8086:8083"
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+    depends_on:
+      - mongodb
+
+  front:
+    image: frontend:latest
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db-users:3306/db_medilabo_users
+    depends_on:
+      - mysql-db-users
+
+  gateway:
+    image: gateway:latest
+    ports:
+      - "8088:8080"
+    depends_on:
+      - backPatient
+      - backDiabete
+      - backNotes
+      - front
