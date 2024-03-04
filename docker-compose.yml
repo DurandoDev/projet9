@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql-db:
-    image: mysql:5.7
+    image: mysql:latest
     environment:
       MYSQL_DATABASE: db_medilabo
       MYSQL_ROOT_PASSWORD: "@zertyuiop123"
@@ -10,7 +10,7 @@ services:
       - "3307:3306"
 
   mysql-db-users:
-    image: mysql:5.7
+    image: mysql:latest
     environment:
       MYSQL_DATABASE: db_medilabo_users
       MYSQL_ROOT_PASSWORD: "@zertyuiop123"
@@ -61,12 +61,25 @@ services:
       - mysql-db-users
 
   gateway:
-    build:
-      context: ./gateway
+    build: ./gateway
     ports:
-      - "8088:8080"
+      - "8080:8080"
     depends_on:
+      - front
       - backpatient
       - backdiabete
       - backnotes
-      - front
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://localhost:8081
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_ID: front-route
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path=/users/**, /signup/**, /login/**, /logout/**, /listUser/**, /home/**, /css/**
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://localhost:8082
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_ID: backPatient-route
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[0]: Path=/patients/**
+      SPRING_CLOUD_GATEWAY_ROUTES[2]_URI: http://localhost:8084
+      SPRING_CLOUD_GATEWAY_ROUTES[2]_ID: backDiabete-route
+      SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[0]: Path=/diabetes/**
+      SPRING_CLOUD_GATEWAY_ROUTES[3]_URI: http://localhost:8083
+      SPRING_CLOUD_GATEWAY_ROUTES[3]_ID: backNotes-route
+      SPRING_CLOUD_GATEWAY_ROUTES[3]_PREDICATES[0]: Path=/notes/**
