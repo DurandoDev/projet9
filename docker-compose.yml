@@ -61,27 +61,13 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db-users:3306/db_medilabo_users
     depends_on:
       - mysql-db-users
+      - gateway
 
   gateway:
     build: ./gateway
     ports:
       - "8080:8080"
     depends_on:
-      - front
       - backpatient
       - backdiabete
       - backnotes
-    environment:
-      SPRING_PROFILES_ACTIVE: default
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://front:8081
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_ID: front-route
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path=/users/**, /signup/**, /login/**, /logout/**, /listUser/**, /home/**, /css/**
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://backpatient:8082
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_ID: backPatient-route
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[0]: Path=/patients/**
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_URI: http://backdiabete:8084
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_ID: backDiabete-route
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[0]: Path=/diabetes/**
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_URI: http://backnotes:8083
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_ID: backNotes-route
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_PREDICATES[0]: Path=/notes/**
